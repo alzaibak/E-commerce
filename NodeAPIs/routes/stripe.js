@@ -43,7 +43,7 @@ router.post('/create-checkout-session', async (req, res) => {
     cancel_url: `${YOUR_DOMAIN}/cart`,
   });
   res.send({url: session.url});
-  const endpointSecret = "whsec_3ac2a7fd580e1469ed8cd41594b935a5adb96d1cd67c849596f5ee3a5c923082";
+  const endpointSecret = process.env.endpointSecret;
 //let endpointSecret;
 router.post('/webhook', express.raw({type: 'application/json'}), (req, res) => {
   const payload = req.body;
