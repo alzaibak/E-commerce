@@ -2,11 +2,11 @@
 const router = require("express").Router();
 const Order = require("../models/Order");
 const CryptoJS = require("crypto-js");
-const { tokenVerfication, tokenVerificationAndAuthorization, tokenVerificationAndAdmin} = require("./tokenVerfication");
+const { tokenVerfication, tokenVerificationAndAuthorization} = require("./tokenVerfication");
 
 
-// add new order to the cart
-router.post("/", tokenVerfication, async (req,res)=>{
+// add new order to the database
+router.post("/", async (req,res)=>{
     const addingToOrder = new Order(req.body)
     try {
         const savedOrder = await addingToOrder.save();
@@ -17,7 +17,7 @@ router.post("/", tokenVerfication, async (req,res)=>{
 })
 
 // changing order by admin only
-router.put("/:id", tokenVerificationAndAdmin, async (req,res)=>{
+router.put("/:id", async (req,res)=>{
     if (req.body.password) {
         req.body.password =  CryptoJS.AES.encrypt( req.body.password, process.env.SECRET_PASSWORD).toString();
 
@@ -34,7 +34,7 @@ router.put("/:id", tokenVerificationAndAdmin, async (req,res)=>{
 })
 
 // order deleting by admin only
-router.delete("/:id", tokenVerificationAndAdmin ,async(req,res)=>{
+router.delete("/:id" ,async(req,res)=>{
     try {
         await Order.findByIdAndDelete(req.params.id);
         res.status(200).json("Your order is deleted")
@@ -55,7 +55,7 @@ router.get("/find/:userId", tokenVerificationAndAuthorization, async (req,res)=>
 })
 
 // Get all orders by admin only
-    router.get("/" , tokenVerificationAndAdmin, async (req,res)=>{
+    router.get("/" , async (req,res)=>{
         try {
             const orders = await Order.find();
             res.status(200).json(orders);
@@ -68,11 +68,10 @@ router.get("/find/:userId", tokenVerificationAndAuthorization, async (req,res)=>
 router.get("/income", async (req,res)=>{
 const todayDate = new Date();
 const lastMonth = new Date(todayDate.setMonth(todayDate.getMonth()-1));
-const previousMonth = new Date (new Date().setMonth(lastMonth.getMonth()-1));
 
 try {
     const income = await Order.aggregate([
-        {$match: {createdAt:{$gte: previousMonth}}},
+        {$match: {createdAt:{$gte: lastMonth}}},
         {$project:
             {   month: {$month:"$createdAt"},
                 sales: "$amount",

@@ -2,8 +2,9 @@
 const router = require("express").Router();
 const User = require("../models/USER");
 const CryptoJS = require("crypto-js");
-
-const { tokenVerificationAndAuthorization, tokenVerificationAndAdmin} = require("./tokenVerfication");
+const dotenv = require("dotenv");
+dotenv.config();
+const { tokenVerificationAndAuthorization} = require("./tokenVerfication");
 
 // Identification of users by using ID in the routes and updating his information
 router.put("/:id", tokenVerificationAndAuthorization, async (req,res)=>{
@@ -46,7 +47,7 @@ router.get("/find/:id" ,tokenVerificationAndAuthorization, async (req,res)=>{
 
 // Get all users information by Admin only
 // req.user.isAdmin not working ?????????????????
-    router.get("/" , tokenVerificationAndAdmin, async (req,res)=>{
+    router.get("/" , async (req,res)=>{
         const newQuery = req.query.new;
     try {
         const users = newQuery 
@@ -61,7 +62,7 @@ router.get("/find/:id" ,tokenVerificationAndAuthorization, async (req,res)=>{
 // Get user states by Admin only (mongodb aggregate method)
 // req.user.isAdmin not working ?????????????????
 
-router.get("/stats", tokenVerificationAndAdmin, async (req,res)=>{
+router.get("/stats", async (req,res)=>{
     const date = new Date();
     const lastYear = new Date(date.setFullYear(date.getFullYear()-1));
     try {

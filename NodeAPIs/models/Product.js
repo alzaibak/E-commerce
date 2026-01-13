@@ -2,13 +2,14 @@ const moongose = require("mongoose");
 
 const ProductSchema = moongose.Schema (
     {
-        tilte: {type:String, require:true, unique:true},
+        title: {type:String, require:true, unique:true},
         dec: {type: String, require:true},
         img: {type:String, require:true},
         categories: {type:Array},
-        size: {type:String},
-        color: {type:String},
-        price: {type:String, require:true},
+        size: {type:Array},
+        color: {type:Array},
+        price: {type:Number, require:true},
+        inStoke: {type:Boolean}
     },
     { timestamps:true},
 );

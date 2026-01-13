@@ -26,13 +26,13 @@ const tokenVerificationAndAuthorization = (req,res,next) =>{
 }
 
 // admin token verfication before adding or deleting products 
-const tokenVerificationAndAdmin = (req,res,next) =>{
-    tokenVerfication(req,res,()=>{
-        
-        if (req.user.isAdmin) {
-            next();
-        }else{ res.status(403).json("You are not admin")}
-    })
-}
+//const tokenVerificationAndAdmin = (req,res,next) =>{
+   // console.log(req.user)
+   /// tokenVerfication(req,res,()=>{
+     //   if (req.user.isAdmin) {
+     //       next();
+     ///   }else{ res.status(403).json("You are not admin")}
+  //  })
+//}
 
-module.exports = {tokenVerfication, tokenVerificationAndAuthorization, tokenVerificationAndAdmin};
+module.exports = {tokenVerfication, tokenVerificationAndAuthorization};
